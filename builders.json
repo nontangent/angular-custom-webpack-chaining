@@ -2,7 +2,7 @@
   "$schema": "node_modules/@angular-devkit/architect/src/builders-schema.json",
   "builders": {
     "browser": {
-      "implementation": "node_modules/@angular-builders/custom-webpack/dist/browser",
+      "implementation": "node_modules/angular-custom-webpack-chaining/dist/browser",
       "schema": "./dist/schemes/browser.json",
       "description": "Build browser app extended with custom webpack chaining config"
     },
@@ -12,7 +12,7 @@
       "description": "Build server app extended with custom webpack chaining config"
     },
     "dev-server": {
-      "implementation": "node_modules/@angular-builders/custom-webpack/dist/dev-server",
+      "implementation": "./dist/dev-server",
       "schema": "./dist/schemes/dev-server.json",
       "description": "Dev server extended with custom webpack chaining config"
     },

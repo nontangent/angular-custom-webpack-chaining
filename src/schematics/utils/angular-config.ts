@@ -1,24 +1,31 @@
 import { Tree } from '@angular-devkit/schematics';
 
-const CUSTOM_WEBPACK_BUILDERS = {
-	'build': 'browser',
-	'serve': 'dev-server',			
-	'server': 'server',
-	'test': 'karma'
+/* const BUILDERS = { */
+/* 	'build': '@angular-builders/custom-webpack:browser', */
+/* 	'serve': '@angular-builders/custom-webpack:dev-server', */			
+/* 	'server': '@angular-builders/custom-webpack:server', */
+/* 	'test': '@angular-builders/custom-webpack:karma' */
+/* }; */
+
+const BUILDERS = {
+	'build': 'angular-custom-webpack-chaining:browser',
+	'serve': 'angular-custom-webpack-chaining:dev-server',			
+	'server': 'angular-custom-webpack-chaining:server',
+	'test': 'angular-custom-webpack-chaining:karma'
 };
+
 
 export function setCustomWebpackBuilderToAngularJson(
 	host: Tree,
 	projectName: string,
-	architect: string = 'build',
+	architect: string = BUILDERS['build'],
 	builder: string = 'browser',
 	webpackConfigPath: string = './extra-webpack.config.js'
 ) {
 	if (host.exists('angular.json')) {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));		
 	
-		json.projects[projectName].architect[architect].builder 
-			= `@angular-builders/custom-webpack:${builder}`;
+		json.projects[projectName].architect[architect].builder = builder;
 
 		if (!json.projects[projectName].architect[architect].options.customWebpackConfig) {
 			json.projects[projectName].architect[architect].options['customWebpackConfig'] = {
@@ -41,11 +48,11 @@ export function setAllCustomWebpackBuilderToAngularJson(
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
 
 		for (const architect of Object.keys(json.projects[projectName].architect)) {
-			if (architect in CUSTOM_WEBPACK_BUILDERS){
+			if (architect in BUILDERS){
 
 				host = setCustomWebpackBuilderToAngularJson(
 					host, projectName, 
-					architect, CUSTOM_WEBPACK_BUILDERS[architect],
+					architect, BUILDERS[architect],
 					webpackConfigPath
 				);
 
@@ -84,7 +91,7 @@ export function setAllCustomWebpackChainingToAngularJson(
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
 
 		for (const architect of Object.keys(json.projects[projectName].architect)) {
-			if (architect in CUSTOM_WEBPACK_BUILDERS) {
+			if (architect in BUILDERS) {
 				host = setCustomWebpackChainingToAngularJson(host, projectName, architect);
 			}
 		}

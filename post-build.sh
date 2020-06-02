@@ -1,12 +1,14 @@
 #!/bin/sh
 
-mkdir dist/schemes
+if [ ! -e dist/schemes ]; then
+	mkdir dist/schemes
+fi
 
-if [[ -f src/schematics/collection.json ]]; then
+if [ -f src/schematics/collection.json ]; then
   cp src/schematics/collection.json dist/schematics/collection.json
 fi
 
-if [[ -f src/builders.json ]]; then
+if [ -f src/builders.json ]; then
 	cp src/builders.json dist/builders.json
 fi
 
