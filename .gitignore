@@ -1,3 +1,5 @@
+dist
+
 # Outputs
 src/**/*.js
 src/**/*.js.map

@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "customWebpackChaining": {
+      "type": "object",
+      "description": "Custom webpack chaining configuration",
+      "properties": {
+				"chain": {
+					"type": "array",
+					"description": "Array of th path to the custom webpack configuration files"
+				}
+      },
+      "default": false
+    }
+  }
+}

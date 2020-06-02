@@ -1,10 +1,27 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
+import { 
+	addPackageToPackageJson, 
+	getPackageVersionFromPackageJson,
+	setAllCustomWebpackBuilderToAngularJson,
+	setAllCustomWebpackChainingToAngularJson
+} from '../utils';
+import {
+	Schema as CustomWebpackSchema
+} from '../ng-add-custom-webpack/schema';
 
+export function ngAdd(options: any): Rule {
+  return (host: Tree, context: SchematicContext) => {
+		const customWebpackOption: CustomWebpackSchema = {
+			path: 'angular-custom-webpack-chaining'
+		};
 
-// You don't have to export the function as default. You can also have more than one rule factory
-// per file.
-export function ngAdd(_options: any): Rule {
-  return (tree: Tree, _context: SchematicContext) => {
-    return tree;
+		context.addTask(new RunSchematicTask(
+			'ng-add-custom-webpack', 
+			customWebpackOption
+		));
+
+		setAllCustomWebpackChainingToAngularJson(host, 'test');
   };
 }
+

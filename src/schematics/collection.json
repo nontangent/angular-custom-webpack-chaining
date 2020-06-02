@@ -4,6 +4,10 @@
     "ng-add": {
       "description": "A blank schematic.",
       "factory": "./ng-add/index#ngAdd"
-    }
+    },
+		"ng-add-custom-webpack": {
+			"description": "Add @angular-builders/custom-webpack",
+			"factory": "./ng-add-custom-webpack/index#ngAddCustomWebpack"
+		}
   }
 }

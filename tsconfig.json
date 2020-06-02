@@ -5,15 +5,16 @@
       "es2018",
       "dom"
     ],
+		"outDir": "dist",
     "declaration": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "noEmitOnError": true,
+    "noEmitOnError": false,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noImplicitThis": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
     "rootDir": "src/",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
@@ -29,6 +30,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "src/*/files/**/*"
+    "src/schematics/*/files/**/*",
+		"src/schemes.ts"
   ]
 }

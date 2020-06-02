@@ -2,8 +2,9 @@
   "name": "angular-custom-webpack-chaining",
   "version": "0.0.0",
   "description": "A blank schematics",
+  "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && sh post-build.sh && ts-node ./merge-schemes.ts",
     "test": "npm run build && jasmine src/**/*_spec.js"
   },
   "keywords": [
@@ -11,15 +12,24 @@
   ],
   "author": "Nzomu Miyamoto",
   "license": "MIT",
-  "schematics": "./src/collection.json",
+  "builders": "./builders.json",
+  "schematics": "./dist/schematics/collection.json",
   "dependencies": {
+    "@angular-builders/custom-webpack": "^9.1.0",
+    "@angular-devkit/architect": "^0.901.7",
     "@angular-devkit/core": "^9.1.7",
     "@angular-devkit/schematics": "^9.1.7",
+    "@angular/compiler": "^9.1.9",
+    "@angular/compiler-cli": "^9.1.9",
     "typescript": "~3.8.2"
   },
   "devDependencies": {
-    "@types/node": "^12.11.1",
+    "@angular-devkit/build-angular": "^0.901.7",
     "@types/jasmine": "~3.5.0",
-    "jasmine": "^3.5.0"
+    "@types/node": "^12.11.1",
+    "jasmine": "^3.5.0",
+    "loadsh": "0.0.4",
+    "lodash": "^4.17.15",
+    "ts-node": "^8.10.2"
   }
 }
