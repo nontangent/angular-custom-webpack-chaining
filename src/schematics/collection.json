@@ -8,6 +8,11 @@
 		"ng-add-custom-webpack": {
 			"description": "Add @angular-builders/custom-webpack",
 			"factory": "./ng-add-custom-webpack/index#ngAddCustomWebpack"
+		},
+		"add-chain": {
+			"description": "Add webpack chain",
+			"factory": "./add-chain/index#addChain"
 		}
+		
   }
 }

@@ -21,6 +21,11 @@ export function ngAdd(options: any): Rule {
 			customWebpackOption
 		));
 
+		context.addTask(new RunSchematicTask(
+			'add-chain',
+			{ path: 'webpack1.config.js', architect: 'build' }
+		));
+
 		setAllCustomWebpackChainingToAngularJson(host, 'test');
   };
 }

@@ -1,0 +1,19 @@
+{
+	"$schema": "http://json-schema.org/schema",
+	"id": "custom-webpack-chaining-add-chain",
+	"title": "Angular Custom Webpack Chaining add-chain schematic",
+	"type": "object",
+	"properties": {
+		"path": {
+			"type": "string",
+			"description": "Path of the additional custom webpack file.",
+			"$default": "./webpack.config.js"
+		},
+		"architect": {
+			"type": "string",
+			"description": "Target architect",
+			"$default": "build"
+		}
+	}
+}
+

@@ -27,11 +27,11 @@ export function setCustomWebpackBuilderToAngularJson(
 	
 		json.projects[projectName].architect[architect].builder = builder;
 
-		if (!json.projects[projectName].architect[architect].options.customWebpackConfig) {
-			json.projects[projectName].architect[architect].options['customWebpackConfig'] = {
-				'path': webpackConfigPath,
-			};
-		}
+		/* if (!json.projects[projectName].architect[architect].options.customWebpackConfig) { */
+		/* 	json.projects[projectName].architect[architect].options['customWebpackConfig'] = { */
+		/* 		'path': webpackConfigPath, */
+		/* 	}; */
+		/* } */
 
 		host.overwrite('angular.json', JSON.stringify(json, null, 2));
 	}
@@ -71,8 +71,8 @@ export function setCustomWebpackChainingToAngularJson(
 	if (host.exists('angular.json')) {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
 
-		if (!json.projects[projectName].architect[architect].options.customWebpackChaining) {
-			json.projects[projectName].architect[architect].options['customWebpackChaining'] = {
+		if (!json.projects[projectName].architect[architect].options.customWebpackConfig) {
+			json.projects[projectName].architect[architect].options['customWebpackConfig'] = {
 				'chain': []
 			};
 		}
@@ -100,7 +100,7 @@ export function setAllCustomWebpackChainingToAngularJson(
 	return host;
 }
 
-export function addCustomWebpackChainToAngularJson(
+export function addChainToAngularJson(
 	host: Tree,
 	projectName: string,
 	webpackConfigPath: string,
@@ -109,11 +109,13 @@ export function addCustomWebpackChainToAngularJson(
 	if (host.exists('angular.json')) {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
 
-		if (!json.projects[projectName].architect[architect].options.customWebpackChaining) {
-			json.projects[projectName].architect[architect].options.customWebpackChaining = [];
+		if (!json.projects[projectName].architect[architect].options.customWebpackConfig) {
+			json.projects[projectName].architect[architect].options['customWebpackConfig'] = {
+				chain: []
+			};
 		}
 
-		json.projects[projectName].architect[architect].options.customWebpackChaining.push(webpackConfigPath);
+		json.projects[projectName].architect[architect].options.customWebpackConfig.chain.push(webpackConfigPath);
 		host.overwrite('angular.json', JSON.stringify(json, null, 2));
 	}
 
