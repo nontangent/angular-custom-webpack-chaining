@@ -5,7 +5,9 @@ import { Schema } from './schema';
 
 export function addChain(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
-		addChainToAngularJson(host, 'test', options.path, options.architect);
+		addChainToAngularJson(
+			host, options.project, options.path, options.architect
+		);
   };
 }
 

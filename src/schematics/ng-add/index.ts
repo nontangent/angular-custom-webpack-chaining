@@ -9,11 +9,13 @@ import {
 import {
 	Schema as CustomWebpackSchema
 } from '../ng-add-custom-webpack/schema';
+import { Schema } from './schema';
 
-export function ngAdd(options: any): Rule {
+export function ngAdd(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
 		const customWebpackOption: CustomWebpackSchema = {
-			path: 'node_modules/angular-custom-webpack-chaining'
+			project: options.project,
+			path: 'extra-webpack.config.js'
 		};
 
 		context.addTask(new RunSchematicTask(
@@ -23,10 +25,16 @@ export function ngAdd(options: any): Rule {
 
 		context.addTask(new RunSchematicTask(
 			'add-chain',
-			{ path: 'webpack1.config.js', architect: 'build' }
+			{
+				project: options.project,	
+				path: 'webpack1.config.js', 
+				architect: 'build' 
+			}
 		));
 
-		setAllCustomWebpackChainingToAngularJson(host, 'test');
+		setAllCustomWebpackChainingToAngularJson(
+			host, options.project
+		);
   };
 }
 

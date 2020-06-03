@@ -4,6 +4,13 @@
 	"title": "Angular Custom Webpack Chaining add-chain schematic",
 	"type": "object",
 	"properties": {
+		"project": {
+			"type": "string",
+			"description": "Target project",
+			"$default": {
+				"$source": "projectName"
+			}
+		},
 		"path": {
 			"type": "string",
 			"description": "Path of the additional custom webpack file.",

@@ -14,13 +14,13 @@ export function ngAddCustomWebpack(options: Schema): Rule {
 
 		addPackageToPackageJson(
 			host, '@angular-builders/custom-webpack', 
-			major(angularDependencyVersion) , 
+			tilderize(angularDependencyVersion), 
 			'devDependencies'
 		);
 
 		setAllCustomWebpackBuilderToAngularJson(
 			host, 
-			'test',
+			options.project,
 			options.path
 		);
 
@@ -28,8 +28,10 @@ export function ngAddCustomWebpack(options: Schema): Rule {
 	};
 }
 
-function major(version: string): string {
-	const [ma, mi, pa] = version.split('.');
-	return `${ma}.${mi}.0`
+function tilderize(version: string): string {
+	version = version[0] in ['~', '^'] ? version.substring(1) : version 
+
+	const [major, minor, patch] = version.split('.');
+	return `~${major}.${minor}.0`
 }
 

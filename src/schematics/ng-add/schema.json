@@ -10,11 +10,7 @@
 			"$default": {
 				"$source": "projectName"
 			}
-		},
-		"path": {
-			"type": "string",
-			"description": "Path of the custom webpack file.",
-			"$default": "./extra-webpack.config.js"
 		}
 	}
 }
+
