@@ -2,23 +2,23 @@
   "$schema": "node_modules/@angular-devkit/architect/src/builders-schema.json",
   "builders": {
     "browser": {
-      "implementation": "node_modules/angular-custom-webpack-chaining/dist/browser",
-      "schema": "./dist/schemes/browser.json",
+      "implementation": "./dist/browser",
+      "schema": "./dist/browser/schema.json",
       "description": "Build browser app extended with custom webpack chaining config"
     },
     "server": {
-      "implementation": "node_modules/@angular-builders/custom-webpack/dist/server",
-      "schema": "./dist/schemes/server.json",
+      "implementation": "./dist/server",
+      "schema": "./dist/server/schema.json",
       "description": "Build server app extended with custom webpack chaining config"
     },
     "dev-server": {
       "implementation": "./dist/dev-server",
-      "schema": "./dist/schemes/dev-server.json",
+      "schema": "./dist/dev-server/schema.json",
       "description": "Dev server extended with custom webpack chaining config"
     },
     "karma": {
-      "implementation": "node_modules/@angular-builders/custom-webpack/dist/karma",
-      "schema": "./dist/schemes/karma.json",
+      "implementation": "./dist/karma",
+      "schema": "./dist/karma/schema.json",
       "description": "Karma server extended with custom webpack chaining config"
     }
   }
