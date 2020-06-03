@@ -12,10 +12,10 @@ Add webpack file path to `customWebpackConfig.chain` in `angular.json`
 
 ```angular.json
 "customWebpackConfig": {
-	"chain": [
+  "chain": [
     "extra-webpack1.config.js",
-		"extra-webpack2.config.js"
-	]
+    "extra-webpack2.config.js"
+  ]
 }
 
 ```
