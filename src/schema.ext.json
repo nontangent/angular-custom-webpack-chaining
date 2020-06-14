@@ -1,15 +1,18 @@
 {
   "properties": {
-    "customWebpackChaining": {
+    "customWebpackConfig": {
       "type": "object",
-      "description": "Custom webpack chaining configuration",
+      "description": "Custom webpack configuration",
       "properties": {
+        "mergeStrategies": {"type": "object", "description": "Merge strategies per webpack config field"},
+        "replaceDuplicatePlugins": {"type": "boolean", "description": "Flag that indicates whether to replace duplicate webpack plugins or not"},
 				"chain": {
 					"type": "array",
-					"description": "Array of th path to the custom webpack configuration files"
+					"description": "Array of the path to the custom webpack configuration files"
 				}
       },
       "default": false
-    }
+    },
+    "indexTransform": {"type": "string", "description": "Path to the file with index.html transform function" }
   }
 }
