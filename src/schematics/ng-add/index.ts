@@ -23,18 +23,14 @@ export function ngAdd(options: Schema): Rule {
 			customWebpackOption
 		));
 
-		console.log('options:', options);
-
-		context.addTask(new RunSchematicTask(
-			'add-chain',
-			{
-				project: options.project,	
-				path: 'webpack1.config.js', 
-				architect: 'build' 
-			}
-		));
-
-		console.log('options:', options);
+		/* context.addTask(new RunSchematicTask( */
+		/* 	'add-chain', */
+		/* 	{ */
+		/* 		project: options.project, */	
+		/* 		path: 'webpack1.config.js', */ 
+		/* 		architect: 'build' */ 
+		/* 	} */
+		/* )); */
 
 		setAllCustomWebpackChainingToAngularJson(
 			host, options.project
