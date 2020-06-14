@@ -14,12 +14,12 @@
 		"path": {
 			"type": "string",
 			"description": "Path of the additional custom webpack file.",
-			"$default": "./webpack.config.js"
+			"default": "./webpack.config.js"
 		},
 		"architect": {
 			"type": "string",
 			"description": "Target architect",
-			"$default": "build"
+			"default": "build"
 		}
 	}
 }
