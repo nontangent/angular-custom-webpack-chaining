@@ -13,14 +13,13 @@ import { Schema } from './schema';
 
 export function ngAdd(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
-		const customWebpackOption: CustomWebpackSchema = {
-			project: options.project,
-			path: 'extra-webpack.config.js'
-		};
-
-		context.addTask(new RunSchematicTask(
+		context.addTask(new RunSchematicTask<any>(
+			'angular-custom-webpack-chaining',
 			'ng-add-custom-webpack', 
-			customWebpackOption
+			{
+				project: options.project,
+				path: 'extra-webpack.config.js'
+			}
 		));
 
 		/* context.addTask(new RunSchematicTask( */
