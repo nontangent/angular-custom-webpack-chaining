@@ -23,6 +23,8 @@ export function ngAdd(options: Schema): Rule {
 			customWebpackOption
 		));
 
+		console.log('options:', options);
+
 		context.addTask(new RunSchematicTask(
 			'add-chain',
 			{
@@ -31,6 +33,8 @@ export function ngAdd(options: Schema): Rule {
 				architect: 'build' 
 			}
 		));
+
+		console.log('options:', options);
 
 		setAllCustomWebpackChainingToAngularJson(
 			host, options.project
