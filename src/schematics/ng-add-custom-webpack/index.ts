@@ -29,8 +29,7 @@ export function ngAddCustomWebpack(options: Schema): Rule {
 }
 
 function tilderize(version: string): string {
-	version = version[0] in ['~', '^'] ? version.substring(1) : version 
-
+	version = ['~', '^'].indexOf(version[0]) != -1 ? version.substring(1) : version 
 	const [major, minor, patch] = version.split('.');
 	return `~${major}.${minor}.0`
 }
