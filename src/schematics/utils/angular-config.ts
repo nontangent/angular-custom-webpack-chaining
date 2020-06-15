@@ -109,13 +109,18 @@ export function addChainToAngularJson(
 	if (host.exists('angular.json')) {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
 
+		const options = json.projects[projectName].architect.options;
+
 		if (!json.projects[projectName].architect[architect].options.customWebpackConfig) {
 			json.projects[projectName].architect[architect].options['customWebpackConfig'] = {
 				chain: []
 			};
 		}
+		
+		if (!~json.projects[projectName].architect[architect].options.customWebpackConfig.chain.indexOf(webpackConfigPath)) {
+			json.projects[projectName].architect[architect].options.customWebpackConfig.chain.push(webpackConfigPath);
+		}
 
-		json.projects[projectName].architect[architect].options.customWebpackConfig.chain.push(webpackConfigPath);
 		host.overwrite('angular.json', JSON.stringify(json, null, 2));
 	}
 
