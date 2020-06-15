@@ -22,15 +22,15 @@
     "@angular/compiler": "^9.1.9",
     "@angular/compiler-cli": "^9.1.9",
     "@schematics/angular": "^9.1.8",
-    "typescript": "~3.8.2"
+    "rxjs": "6.5.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.901.7",
     "@types/jasmine": "~3.5.0",
     "@types/node": "^12.11.1",
     "jasmine": "^3.5.0",
     "loadsh": "0.0.4",
     "lodash": "^4.17.15",
-    "ts-node": "^8.10.2"
+    "ts-node": "^8.10.2",
+    "typescript": "^3.8.3"
   }
 }
