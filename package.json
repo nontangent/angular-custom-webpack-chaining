@@ -1,6 +1,6 @@
 {
   "name": "angular-custom-webpack-chaining",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "A blank schematics",
   "main": "./dist/index.js",
   "scripts": {
