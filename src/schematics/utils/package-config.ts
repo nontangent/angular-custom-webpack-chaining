@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Tree} from '@angular-devkit/schematics';
+import { Tree } from '@angular-devkit/schematics';
 
 /**
  * Sorts the keys of the given object.
@@ -16,14 +16,15 @@ function sortObjectByKeys(obj: object) {
   return Object.keys(obj).sort().reduce((result, key) => (result[key] = obj[key]) && result, {});
 }
 
-/** Adds a package to the package.json in the given host tree. */
-export function addPackageToPackageJson(host: Tree, pkg: string, version: string, dependencies: string = 'dependencies'): Tree {
+export function addPackageToPackageJson(
+	host: Tree, 
+	pkg: string, 
+	version: string, 
+	dependencies: string = 'dependencies'
+): Tree {
 
-  if (host.exists('package.json')) {
-    const sourceText = host.read('package.json')!.toString('utf-8');
-    const json = JSON.parse(sourceText);
-
-    if (!json[dependencies]) {
+	return savePackageJson(host, (json: object): object => {
+		if (!json[dependencies]) {
       json[dependencies] = {};
     }
 
@@ -32,14 +33,16 @@ export function addPackageToPackageJson(host: Tree, pkg: string, version: string
       json[dependencies] = sortObjectByKeys(json[dependencies]);
     }
 
-    host.overwrite('package.json', JSON.stringify(json, null, 2));
-  }
+		return json;
+	});
 
-  return host;
 }
 
 /** Gets the version of the specified package by looking at the package.json in the given tree. */
-export function getPackageVersionFromPackageJson(tree: Tree, name: string): string | null {
+export function getPackageVersionFromPackageJson(
+	tree: Tree,
+ 	name: string
+): string | null {
   if (!tree.exists('package.json')) {
     return null;
   }
@@ -52,3 +55,42 @@ export function getPackageVersionFromPackageJson(tree: Tree, name: string): stri
 
   return null;
 }
+
+
+export function savePackageJson(
+	host: Tree,
+	callback: (json: object) => object
+): Tree {
+	return saveJson(host, 'package.json', callback);
+}
+
+export function saveJson(
+	host: Tree, 
+	path: string, 
+	callback: (json: object) => object
+): Tree {
+
+	return saveFile(host, path, (src: string) => {
+		const json = JSON.parse(src);
+		return JSON.stringify(callback(json));
+	});
+
+}
+
+export function saveFile(
+	host: Tree, 
+	path: string, 
+	callback: (src: string) => string
+): Tree {
+	
+	if (host.exists(path)) {
+		const src = host.read(path)!.toString('utf-8');
+		const dest = callback(src);
+		host.overwrite(path, dest);
+	} else {
+		host.create(path, callback(''));
+	}
+
+	return host;
+}
+

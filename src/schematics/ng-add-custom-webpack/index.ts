@@ -13,7 +13,8 @@ export function ngAddCustomWebpack(options: Schema): Rule {
 		const angularDependencyVersion = ngCoreVersionTag || '0.0.0-NG';
 
 		addPackageToPackageJson(
-			host, '@angular-builders/custom-webpack', 
+			host, 
+			'@angular-builders/custom-webpack', 
 			tilderize(angularDependencyVersion), 
 			'devDependencies'
 		);
