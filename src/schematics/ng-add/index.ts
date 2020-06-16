@@ -13,6 +13,15 @@ import { Schema } from './schema';
 
 export function ngAdd(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
+		addPackageToPackageJson(
+			host,
+			'angular-custom-webpack-chaining',
+			'latest',
+			'devDependencies'
+		);
+
+		context.addTask(new NodePackageInstallTask());
+
 		context.addTask(new RunSchematicTask<any>(
 			'angular-custom-webpack-chaining',
 			'ng-add-custom-webpack', 
