@@ -26,7 +26,8 @@ export async function resolveChaining(
 	    normalize(workspaceRoot),
 			{...customWebpackConfig, path: path},
 			browserWebpackConfig,
-			options
+			options,
+			target
 		);
 	}
 	return browserWebpackConfig;
@@ -43,7 +44,7 @@ export const customWebpackConfigTransformFactory: (
 		browserWebpackConfig
 	);
 };
-
+  
 
 export const getTransforms = (
 	options: CustomWebpackSchema, 

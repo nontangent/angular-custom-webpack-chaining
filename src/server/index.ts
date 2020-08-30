@@ -4,6 +4,7 @@
 
 import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect';
 import { executeServerBuilder, ServerBuilderOptions } from '@angular-devkit/build-angular';
+import { ServerBuilderOutput } from '@angular-devkit/build-angular';
 import { json } from '@angular-devkit/core';
 import { Observable } from 'rxjs';
 import { customWebpackConfigTransformFactory } from '../common';
@@ -14,7 +15,7 @@ export type CustomWebpackServerSchema = ServerBuilderOptions & CustomWebpackSche
 export function buildCustomWebpackServer(
   options: CustomWebpackServerSchema,
   context: BuilderContext
-): Observable<BuilderOutput> {
+): Observable<ServerBuilderOutput> {
   return executeServerBuilder(options, context, {
     webpackConfiguration: customWebpackConfigTransformFactory(options, context),
   });
