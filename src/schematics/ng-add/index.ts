@@ -13,36 +13,51 @@ import { Schema } from './schema';
 
 export function ngAdd(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
-		addPackageToPackageJson(
-			host,
-			'angular-custom-webpack-chaining',
-			'latest',
-			'devDependencies'
-		);
+    const ngCoreVersionTag = getPackageVersionFromPackageJson(host, '@angular/core');
+    const angularDependencyVersion = ngCoreVersionTag || `0.0.0-NG`;
 
-		context.addTask(new NodePackageInstallTask());
+    if (angularDependencyVersion === '0.0.0-NG') {
+      throw new Error('@angular/core version is not supported.');
+    }
 
-		context.addTask(new RunSchematicTask<any>(
-			'angular-custom-webpack-chaining',
-			'ng-add-custom-webpack', 
-			{
-				project: options.project,
-				path: 'extra-webpack.config.js'
-			}
-		));
+    addPackageToPackageJson(
+      host,
+      'angular-custom-webpack-chaining',
+      getCustomWebpackVersion(angularDependencyVersion),
+      'devDependencies'
+    );
 
-		/* context.addTask(new RunSchematicTask( */
-		/* 	'add-chain', */
-		/* 	{ */
-		/* 		project: options.project, */	
-		/* 		path: 'webpack1.config.js', */ 
-		/* 		architect: 'build' */ 
-		/* 	} */
-		/* )); */
+    context.addTask(new NodePackageInstallTask());
 
-		setAllCustomWebpackChainingToAngularJson(
-			host, options.project
-		);
+    context.addTask(new RunSchematicTask<any>(
+      'angular-custom-webpack-chaining',
+      'ng-add-custom-webpack', 
+      {
+        project: options.project,
+        path: 'extra-webpack.config.js'
+      }
+    ));
+
+    /* context.addTask(new RunSchematicTask( */
+    /* 	'add-chain', */
+    /* 	{ */
+    /* 		project: options.project, */	
+    /* 		path: 'webpack1.config.js', */ 
+    /* 		architect: 'build' */ 
+    /* 	} */
+    /* )); */
+
+    setAllCustomWebpackChainingToAngularJson(
+      host, options.project
+    );
   };
 }
 
+export function getCustomWebpackVersion(ver: string): string {
+  const [major, minor, patch] = (ver.replace(/(\^|\~)/, '')).split('.');
+  switch (major) {
+    case '10': return '0.1000.0';
+    case '11': return '0.1100.0';
+    default: throw new Error('@angular/core version is not supported.');
+  }
+}
