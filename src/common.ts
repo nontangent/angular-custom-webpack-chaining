@@ -5,9 +5,7 @@ import { Configuration } from 'webpack';
 import { 
 	CustomWebpackBuilder 
 } from '@angular-builders/custom-webpack/dist/custom-webpack-builder';
-import { 
-	indexHtmlTransformFactory
-} from '@angular-builders/custom-webpack/dist/common';
+import { indexHtmlTransformFactory } from '@angular-builders/custom-webpack';
 import { CustomWebpackSchema } from './custom-webpack-schema';
 import { CustomWebpackBuilderConfig	} from './custom-webpack-builder-config';
 
