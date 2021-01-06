@@ -56,8 +56,8 @@ export function ngAdd(options: Schema): Rule {
 export function getCustomWebpackVersion(ver: string): string {
   const [major, minor, patch] = (ver.replace(/(\^|\~)/, '')).split('.');
   switch (major) {
-    case '10': return '0.1000.0';
-    case '11': return '0.1100.0';
+    case '10': return '~0.1000.0';
+    case '11': return '~0.1100.0';
     default: throw new Error('@angular/core version is not supported.');
   }
 }
