@@ -10,7 +10,7 @@
   "keywords": [
     "schematics"
   ],
-  "author": "Nzomu Miyamoto",
+  "author": "Nozomu Miyamoto",
   "license": "MIT",
   "builders": "./builders.json",
   "schematics": "./dist/schematics/collection.json",
