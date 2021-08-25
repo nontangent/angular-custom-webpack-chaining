@@ -4,19 +4,23 @@ import { CustomWebpackBuilder } from '@angular-builders/custom-webpack/dist/cust
 import { Configuration } from 'webpack';
 import { Schema } from './custom-webpack-schema';
 
+const setup = (options: Schema, workspaceRoot: string, target: TargetOptions) => {
+	const root = normalize(workspaceRoot);
+	const config = options.customWebpackConfig;
+	return (base: Configuration, path: string) => {
+		return CustomWebpackBuilder.buildWebpackConfig(root, {...config, path}, base, options, target);
+	};
+}
+
 export async function resolveChain(
 	options: Schema, 
 	workspaceRoot: string, 
 	target: TargetOptions,
-	browserWebpackConfig: Configuration
+	baseWebpackConfig: Configuration
 ): Promise<Configuration> {
 
-	const config = options.customWebpackConfig;
+	const { chain } = options.customWebpackConfig;
+	const build = setup(options, workspaceRoot, target);
 
-	return await (config.chain ?? []).reduce(async (resolved, path) => {
-		return await CustomWebpackBuilder.buildWebpackConfig(
-	    normalize(workspaceRoot), {...config, path},
-			await resolved, options, target
-		);
-	}, Promise.resolve(browserWebpackConfig as Configuration));
+	return (chain ?? []).reduce(async (base, path) => build(await base, path), Promise.resolve(baseWebpackConfig));
 }
