@@ -3,34 +3,23 @@ import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schema
 import { 
 	addPackageToPackageJson, 
 	getPackageVersionFromPackageJson,
-	setAllCustomWebpackBuilderToAngularJson,
 	setAllCustomWebpackChainingToAngularJson
 } from '../utils';
-import {
-	Schema as CustomWebpackSchema
-} from '../ng-add-custom-webpack/schema';
 import { Schema } from './schema';
 
 export function ngAdd(options: Schema): Rule {
   return (host: Tree, context: SchematicContext) => {
     const ngCoreVersionTag = getPackageVersionFromPackageJson(host, '@angular/core');
     const angularDependencyVersion = ngCoreVersionTag || `0.0.0-NG`;
+    const packageName = 'angular-custom-webpack-chaining';
+    const version = getCustomWebpackVersion(angularDependencyVersion);
 
-    if (angularDependencyVersion === '0.0.0-NG') {
-      throw new Error('@angular/core version is not supported.');
-    }
-
-    addPackageToPackageJson(
-      host,
-      'angular-custom-webpack-chaining',
-      getCustomWebpackVersion(angularDependencyVersion),
-      'devDependencies'
-    );
+    addPackageToPackageJson(host, packageName, version, 'devDependencies');
 
     context.addTask(new NodePackageInstallTask());
 
     context.addTask(new RunSchematicTask<any>(
-      'angular-custom-webpack-chaining',
+      packageName,
       'ng-add-custom-webpack', 
       {
         project: options.project,
@@ -38,18 +27,7 @@ export function ngAdd(options: Schema): Rule {
       }
     ));
 
-    /* context.addTask(new RunSchematicTask( */
-    /* 	'add-chain', */
-    /* 	{ */
-    /* 		project: options.project, */	
-    /* 		path: 'webpack1.config.js', */ 
-    /* 		architect: 'build' */ 
-    /* 	} */
-    /* )); */
-
-    setAllCustomWebpackChainingToAngularJson(
-      host, options.project
-    );
+    setAllCustomWebpackChainingToAngularJson(host, options.project);
   };
 }
 
@@ -58,6 +36,7 @@ export function getCustomWebpackVersion(ver: string): string {
   switch (major) {
     case '10': return '~0.1000.x';
     case '11': return '~0.1100.x';
-    default: throw new Error('@angular/core version is not supported.');
+    case '12': return '~0.1200.x';
+    default: throw new Error(`custom-webpack chaining is not support Angular ${ver}.`);
   }
 }
