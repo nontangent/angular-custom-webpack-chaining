@@ -1,29 +1,22 @@
 import { normalize } from '@angular-devkit/core';
+import { TargetOptions } from '@angular-builders/custom-webpack';
 import { CustomWebpackBuilder } from '@angular-builders/custom-webpack/dist/custom-webpack-builder';
-import { CustomWebpackSchema } from './custom-webpack-schema';
-import { CustomWebpackBuilderConfig	} from './custom-webpack-builder-config';
+import { Configuration } from 'webpack';
+import { Schema } from './custom-webpack-schema';
 
-export async function resolveChaining(
-	options: CustomWebpackSchema, 
-	workspaceRoot, 
-	target,
-	browserWebpackConfig
-) {
-	const customWebpackConfig: CustomWebpackBuilderConfig 
-		= options.customWebpackConfig;
-	const chain = customWebpackConfig.chain || [];
+export async function resolveChain(
+	options: Schema, 
+	workspaceRoot: string, 
+	target: TargetOptions,
+	browserWebpackConfig: Configuration
+): Promise<Configuration> {
 
-	for (const path of chain) {
-		browserWebpackConfig = await CustomWebpackBuilder.buildWebpackConfig(
-	    normalize(workspaceRoot),
-			{...customWebpackConfig, path: path},
-			browserWebpackConfig,
-			options,
-			target
+	const config = options.customWebpackConfig;
+
+	return await (config.chain ?? []).reduce(async (resolved, path) => {
+		return await CustomWebpackBuilder.buildWebpackConfig(
+	    normalize(workspaceRoot), {...config, path},
+			await resolved, options, target
 		);
-	}
-	return browserWebpackConfig;
+	}, Promise.resolve(browserWebpackConfig as Configuration));
 }
-
-
-
