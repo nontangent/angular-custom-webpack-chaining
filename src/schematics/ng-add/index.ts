@@ -17,15 +17,17 @@ export function ngAdd(options: Schema): Rule {
 
     addPackageToPackageJson(host, packageName, version, 'devDependencies');
 
-    context.addTask(new NodePackageInstallTask());
+    const installTask = context.addTask(new NodePackageInstallTask());
+    const addCustomWebpack = context.addTask(new RunSchematicTask<any>(packageName, 'ng-add-custom-webpack', {
+      ...options, path: 'extra-webpack.config.js'
+    }), [installTask]);
 
-    context.addTask(new RunSchematicTask<any>(packageName, 'ng-add-custom-webpack', {
-      project: options.project,
-      path: 'extra-webpack.config.js'
-    }));
-
-    setAllCustomWebpackChainingToAngularJson(host, options.project);
+    context.addTask(new RunSchematicTask('setup', options), [addCustomWebpack]);
   };
+}
+
+export function setup(options: Schema): Rule {
+  return (host: Tree) => setAllCustomWebpackChainingToAngularJson(host, options.project);
 }
 
 export function getCustomWebpackVersion(version: string): string {

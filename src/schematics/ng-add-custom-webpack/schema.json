@@ -1,6 +1,6 @@
 {
 	"$schema": "http://json-schema.org/schema",
-	"id": "custom-webpack-ng-add",
+	"$id": "custom-webpack-ng-add",
 	"title": "Angular Custom Webpack ng-add schematic",
 	"type": "object",
 	"properties": {

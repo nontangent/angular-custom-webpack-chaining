@@ -6,9 +6,19 @@
       "factory": "./ng-add/index#ngAdd",
 			"schema": "./ng-add/schema.json"
     },
+		"setup": {
+			"description": "Add angular-custom-webpack-chaining",
+      "factory": "./ng-add/index#setup",
+			"schema": "./ng-add/schema.json"
+		},
 		"ng-add-custom-webpack": {
 			"description": "Add @angular-builders/custom-webpack",
-			"factory": "./ng-add-custom-webpack/index#ngAddCustomWebpack",
+			"factory": "./ng-add-custom-webpack/index#ngAdd",
+			"schema": "./ng-add-custom-webpack/schema.json"
+		},
+		"setup-custom-webpack": {
+			"description": "Add @angular-builders/custom-webpack",
+			"factory": "./ng-add-custom-webpack/index#setup",
 			"schema": "./ng-add-custom-webpack/schema.json"
 		},
 		"add-chain": {

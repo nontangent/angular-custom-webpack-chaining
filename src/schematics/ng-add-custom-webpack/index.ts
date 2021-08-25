@@ -1,5 +1,5 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
 import { 
 	addPackageToPackageJson, 
 	getPackageVersionFromPackageJson,
@@ -8,7 +8,7 @@ import {
 } from '../utils';
 import { Schema } from './schema';
 
-export function ngAddCustomWebpack(options: Schema): Rule {
+export function ngAdd(options: Schema): Rule {
 	return (host: Tree, context: SchematicContext) => {
 		const ngCoreVersionTag = getPackageVersionFromPackageJson(host, '@angular/core');
 		const angularDependencyVersion = ngCoreVersionTag || '0.0.0-NG';
@@ -17,14 +17,17 @@ export function ngAddCustomWebpack(options: Schema): Rule {
 
 		addPackageToPackageJson(host, packageName, version, 'devDependencies');
 
-		setAllCustomWebpackBuilderToAngularJson(host, options.project, options.path);
-
-		context.addTask(new NodePackageInstallTask());
+		const installTask = context.addTask(new NodePackageInstallTask());
+		context.addTask(new RunSchematicTask('angular-custom-webpack-chaining', 'setup-custom-webpack', options), [installTask]);
 	};
 }
 
+export function setup(options: Schema): Rule {
+	return (host: Tree) => setAllCustomWebpackBuilderToAngularJson(host, options.project, options.path);
+}
+
 function tilderize(version: string): string {
-	const [major, minor] = parseVersion(version);
-	return `~${major}.${minor}.0`
+	const [major] = parseVersion(version);
+	return `~${major}.0.0`;
 }
 

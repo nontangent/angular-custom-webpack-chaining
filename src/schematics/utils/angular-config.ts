@@ -1,4 +1,5 @@
 import { Tree } from '@angular-devkit/schematics';
+import * as _ from 'lodash';
 
 const BUILDERS = {
 	'build': 'angular-custom-webpack-chaining:browser',
@@ -7,6 +8,25 @@ const BUILDERS = {
 	'test': 'angular-custom-webpack-chaining:karma'
 };
 
+const customWebpackPath = (projectName: string, architect: string): string[] => {
+	return ['projects', projectName, 'architect', architect, 'options', 'customWebpack'];
+}
+
+const getConfig = (json: object, projectName: string, architect: string): {path?: string, chain?: string[]} => {
+	return _.get(json, customWebpackPath(projectName, architect));
+}
+
+const configExists = (json: object, projectName: string, architect: string): boolean => {
+	return !!getConfig(json, projectName, architect);
+}
+
+const setConfig = (json: object, projectName: string, architect: string, config: object) => {
+	return _.set(json, customWebpackPath(projectName, architect), config);
+}
+
+const setConfigIfNotExists = (json: object, projectName: string, architect: string, config: object): void => {
+	if (!configExists(json, projectName, architect)) setConfig(json, projectName, architect, config);
+}
 
 export function setCustomWebpackBuilderToAngularJson(
 	host: Tree,
@@ -14,22 +34,14 @@ export function setCustomWebpackBuilderToAngularJson(
 	architect: string = BUILDERS['build'],
 	builder: string = 'browser',
 	webpackConfigPath: string = './extra-webpack.config.js'
-) {
-	if (host.exists('angular.json')) {
+): Tree {
+	return exists(host, 'angular.json', () => {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));		
-	
-		json.projects[projectName].architect[architect].builder = builder;
-
-		/* if (!json.projects[projectName].architect[architect].options.customWebpackConfig) { */
-		/* 	json.projects[projectName].architect[architect].options['customWebpackConfig'] = { */
-		/* 		'path': webpackConfigPath, */
-		/* 	}; */
-		/* } */
-
+		_.set(json, ['projects', projectName, 'architect', architect, 'builder'], builder);		
+		setConfigIfNotExists(json, projectName, architect, {path: webpackConfigPath});
 		host.overwrite('angular.json', JSON.stringify(json, null, 2));
-	}
-
-	return host;
+		return host;
+	});
 }
 
 export function setAllCustomWebpackBuilderToAngularJson(
@@ -37,60 +49,41 @@ export function setAllCustomWebpackBuilderToAngularJson(
 	projectName: string,
 	webpackConfigPath: string = './extra-webpack.config.js'
 ) {
-	if (host.exists('angular.json')) {
+	return exists(host, 'angular.json', () => {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
-
-		for (const architect of Object.keys(json.projects[projectName].architect)) {
-			if (architect in BUILDERS){
-
-				host = setCustomWebpackBuilderToAngularJson(
-					host, projectName, 
-					architect, BUILDERS[architect],
-					webpackConfigPath
-				);
-
-			}
-		}
-	}
-
-	return host;
+		return Object.keys(_.get(json, ['projects', projectName, 'architect']) ?? [])
+			.filter(arch => arch in BUILDERS)
+			.reduce((host, architect) => setCustomWebpackBuilderToAngularJson(
+				host, 
+				projectName, 
+				architect,
+				BUILDERS[architect],
+				webpackConfigPath
+			), host);
+	});
 }
 
 export function setCustomWebpackChainingToAngularJson(
 	host: Tree,
 	projectName: string,
 	architect: string = 'build'
-) {
-	if (host.exists('angular.json')) {
+): Tree {
+	return exists(host, 'angular.json', () => {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
-
-		if (!json.projects[projectName].architect[architect].options.customWebpackConfig) {
-			json.projects[projectName].architect[architect].options['customWebpackConfig'] = {
-				'chain': []
-			};
-		}
-
+		let config = getConfig(json, projectName, architect);
+		setConfig(json, projectName, architect, config?.path ? {chain: [config.path]} : config ?? {chain: []});
 		host.overwrite('angular.json', JSON.stringify(json, null, 2));
-		
-	}
-	return host;
+		return host;
+	});
 }
 
-export function setAllCustomWebpackChainingToAngularJson(
-	host: Tree,
-	projectName: string
-) {
-	if (host.exists('angular.json')) {
+export function setAllCustomWebpackChainingToAngularJson(host: Tree, projectName: string): Tree {
+	return exists(host, 'angular.json', () => {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
-
-		for (const architect of Object.keys(json.projects[projectName].architect)) {
-			if (architect in BUILDERS) {
-				host = setCustomWebpackChainingToAngularJson(host, projectName, architect);
-			}
-		}
-	}
-
-	return host;
+		return Object.keys(_.get(json, ['projects', projectName, 'architect']) ?? [])
+			.filter(arch => arch in BUILDERS)
+			.reduce((host, architect) => setCustomWebpackChainingToAngularJson(host, projectName, architect), host);
+	});
 }
 
 export function addChainToAngularJson(
@@ -98,25 +91,19 @@ export function addChainToAngularJson(
 	projectName: string,
 	webpackConfigPath: string,
 	architect: string = 'build'
-) {
-	if (host.exists('angular.json')) {
+): Tree {
+	return exists(host, 'angular.json', () => {
 		const json = JSON.parse(host.read('angular.json')!.toString('utf-8'));
-
-		const options = json.projects[projectName].architect.options;
-
-		if (!json.projects[projectName].architect[architect].options.customWebpackConfig) {
-			json.projects[projectName].architect[architect].options['customWebpackConfig'] = {
-				chain: []
-			};
+		setConfigIfNotExists(json, projectName, architect, {chain: []});
+		const config = getConfig(json, projectName, architect);
+		if(config?.chain && !config.chain.includes(webpackConfigPath)) {
+			config.chain.push(webpackConfigPath);
 		}
-		
-		if (!~json.projects[projectName].architect[architect].options.customWebpackConfig.chain.indexOf(webpackConfigPath)) {
-			json.projects[projectName].architect[architect].options.customWebpackConfig.chain.push(webpackConfigPath);
-		}
-
 		host.overwrite('angular.json', JSON.stringify(json, null, 2));
-	}
-
-	return host;
+		return host;
+	})
 }
 
+function exists(host: Tree, path: string, callback: () => Tree): Tree {
+	return host.exists(path) ? callback() : host;
+}
