@@ -15,7 +15,7 @@ Add webpack file path to `customWebpackConfig.chain` in `angular.json`
 "projects": {
   "app": {
     "architect": {
-      "build":: {
+      "build": {
         "builder": "angular-custom-webpack-chaining:browser",
       },
       "options": {
@@ -32,28 +32,26 @@ Add webpack file path to `customWebpackConfig.chain` in `angular.json`
 ```
 
 `plugin-a.config.js`
-```
+```plugin-a.config.js
 const webpack = require('webpack');
 
-module.exports = (config, options, targetOptions) => {
-  config.plugins.push(PLUGIN_A);
-  return config;
-};
+module.exports = (config, options, targetOptions) => ({
+  ...config, plugins: [...config.plugins, PLUGIN_A],
+});
 ```
 
 `plugin-b.config.js`
-```
+```plugin-b.config.js
 const webpack = require('webpack');
 
-module.exports = (config, options, targetOptions) => {
-  config.plugins.push(PLUGIN_B);
-  return config;
-};
+module.exports = (config, options, targetOptions) => ({
+  ...config, plugins: [...config.plugins, PLUGIN_B],
+});
 ```
 
 output webpack config is following.
 
-```
+```output.webpack.json
 {
   plugin: [
     PLUGIN_A,
