@@ -1,12 +1,5 @@
 import { Tree } from '@angular-devkit/schematics';
 
-/* const BUILDERS = { */
-/* 	'build': '@angular-builders/custom-webpack:browser', */
-/* 	'serve': '@angular-builders/custom-webpack:dev-server', */			
-/* 	'server': '@angular-builders/custom-webpack:server', */
-/* 	'test': '@angular-builders/custom-webpack:karma' */
-/* }; */
-
 const BUILDERS = {
 	'build': 'angular-custom-webpack-chaining:browser',
 	'serve': 'angular-custom-webpack-chaining:dev-server',			

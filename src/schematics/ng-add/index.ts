@@ -3,6 +3,7 @@ import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schema
 import { 
 	addPackageToPackageJson, 
 	getPackageVersionFromPackageJson,
+	parseVersion,
 	setAllCustomWebpackChainingToAngularJson
 } from '../utils';
 import { Schema } from './schema';
@@ -18,25 +19,21 @@ export function ngAdd(options: Schema): Rule {
 
     context.addTask(new NodePackageInstallTask());
 
-    context.addTask(new RunSchematicTask<any>(
-      packageName,
-      'ng-add-custom-webpack', 
-      {
-        project: options.project,
-        path: 'extra-webpack.config.js'
-      }
-    ));
+    context.addTask(new RunSchematicTask<any>(packageName, 'ng-add-custom-webpack', {
+      project: options.project,
+      path: 'extra-webpack.config.js'
+    }));
 
     setAllCustomWebpackChainingToAngularJson(host, options.project);
   };
 }
 
-export function getCustomWebpackVersion(ver: string): string {
-  const [major, minor, patch] = (ver.replace(/(\^|\~)/, '')).split('.');
+export function getCustomWebpackVersion(version: string): string {
+	const [major, minor] = parseVersion(version);
   switch (major) {
     case '10': return '~0.1000.x';
     case '11': return '~0.1100.x';
     case '12': return '~0.1200.x';
-    default: throw new Error(`custom-webpack chaining is not support Angular ${ver}.`);
+    default: throw new Error(`custom-webpack chaining is not support Angular ${version}.`);
   }
 }
